@@ -1,5 +1,5 @@
 var http = require('http');
-var https = require('https');
+// var https = require('https');
 const fs = require('fs');
 var tls = require('tls');
 // HTTPS port 443, http port 80. To be changed in production
@@ -10,8 +10,8 @@ var url = require('url');
 var uniqid = require('uniqid');
 var cookieService= require("cookies");
 var debug=true;
-var skey = fs.readFileSync('lkey.pem');
-var scert = fs.readFileSync('lcert.pem');
+// var skey = fs.readFileSync('lkey.pem');
+// var scert = fs.readFileSync('lcert.pem');
 const util = require('util');
 let DocumentDBClient = require('documentdb').DocumentClient;
 let docdbUtils = require('./models/cosmosdb-manager');
@@ -369,12 +369,12 @@ function serverCall(req, res){
 	  }
 }
 
-
+/*
 https.createServer(options, function (req, res) {
 	serverCall(req, res);     
-}).listen(port);
-console.log('Server running at https://127.0.0.1:'+port);
-/*http.createServer(options, function (req, res) {
+}).listen(port);*/
+// console.log('Server running at https://127.0.0.1:'+port);
+http.createServer(options, function (req, res) {
 	serverCall(req, res); 
 }).listen(port);
-console.log('Server running at http://127.0.0.1:'+port);*/
+console.log('Server running at http://127.0.0.1:'+port);
