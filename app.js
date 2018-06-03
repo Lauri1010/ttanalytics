@@ -348,7 +348,7 @@ function serverCall(req, res){
 					if(typeof pCall==='function'){
 						pCall(ttid,url_parts,query,pathName,req,res);
 					}
-					res.statusCode = 204;
+					res.statusCode = 200;
 					res.setHeader('Content-Type', 'image/jpg');
 					res.end();
 					
