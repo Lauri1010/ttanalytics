@@ -178,18 +178,15 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 				  console.log('Ip before '+ip);
 			  }
 			  
-			  if(!ip || typeof ip == 'undefined'){
+			  var ip=requestIp.getClientIp(req); 
+
+			  if(!ip || typeof ip==='undefined'){
 				  ip=0;
 			  }else if(ipService.isV4Format(ip) && ip){
-				  ip=ipService.mask(ip);
-				  if(typeof ip!=='undefined'){
-					ip=ipService.toLong(ip);
-				  }else if(typeof ip == 'undefined' || !ip){
-					ip=0;
-				  }
+				  ip=ipService.mask(ip,'255.255.255.0');
 			  }
 			  
-			  if(debug){
+			  if(debug && typeof ip !== 'undefined'){
 				  console.log('Ip '+ip);
 			  }
 			  
