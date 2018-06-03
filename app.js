@@ -83,6 +83,10 @@ var optionshttps = {
 	    agent: false
 }; */
 
+var options = {
+	 timeout:1000
+};
+
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -383,7 +387,7 @@ https.createServer(optionshttps, function (req, res) {
 	serverCall(req, res);     
 }).listen(porthttps);
 console.log('Server running at https://127.0.0.1:'+porthttps); */
-http.createServer(function (req, res) {
+http.createServer(options,function (req, res) {
 	serverCall(req, res); 
 }).listen(porthttp);
 console.log('Server running at http://127.0.0.1:'+porthttp);
