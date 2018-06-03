@@ -319,13 +319,13 @@ function serverCall(req, res){
 	    console.log('tid: '+ttid);
 	    console.log(s);
 	   }
-	   
+	   /*
 	   if (req.url === '/favicon.ico') {
 		    res.writeHead(200, {'Content-Type': 'image/x-icon'} );
 		    res.end();
 		    console.log('favicon requested');
 		    return;
-	  }
+	   }*/
 
 	   if(req.method==='GET') {
 	      if(pathName==="/tl/"){
