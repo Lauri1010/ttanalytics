@@ -176,11 +176,11 @@
 					if(self.cm){console.log(self.aOptOut);};
 					if(self.cm){console.log(self.coptOut);};
 					
-					if(!pageName && typeof pageName !== 'string'){
+					// if(!pageName && typeof pageName !== 'string'){
 						self.pageName=self.pageNameF();
-					}else{
-						self.pageName=pageName;
-					}
+					// }else{
+						// self.pageName=pageName;
+					// }
 					
 					if(typeof ttid == 'string'){
 						self.ttid=ttid
