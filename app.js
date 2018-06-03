@@ -73,14 +73,14 @@ ttModel.prototype = {
 };
 let model=new ttModel();
 model.init();
-
+/*
 var optionshttps = {
 	    key: skey,
 	    cert: scert,
 	    rejectUnauthorized: false,
 	    requestCert: true,
 	    agent: false
-};
+}; */
 
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
