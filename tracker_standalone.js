@@ -34,14 +34,14 @@
 			this.optOut=false;
 			this.coptOut=false;
 			// this.protocol=(location.protocol == "https:" ? "https://" : "http://");
-			this.protocol='https:';
+			this.protocol='https://';
 	        this.eType='mousedown';
 	        if ('ontouchstart' in document.documentElement === true){
 	          this.eType='touchstart';
 	        }
 	        this.eSelector='a[href]';
-	        this.serverDomain='https://ttanalytics.azurewebsites.net';
-	        this.serverPort=':8888';
+	        this.serverDomain='ttanalytics.azurewebsites.net';
+	        this.serverPort='';
 			this.md=1;
 			this.bust=true;
 			this.autotagging=true;
