@@ -390,5 +390,5 @@ console.log('Server running at https://127.0.0.1:'+porthttps); */
 var server = http.createServer(function(req, res) {
      serverCall(req, res);  
 });
-server.listen(porthttp);
 server.timeout = 1000;
+server.listen(porthttp);
