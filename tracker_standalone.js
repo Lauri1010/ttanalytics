@@ -216,9 +216,7 @@
 			var self=this;
 			try{
 				if(self.cm){console.log(pageName);};
-				if(self.ttid && typeof self.ttid === 'string' 
-					&& typeof pageName === 'string' && pageName
-					&& !self.aOptOut){
+				if(self.ttid && typeof self.ttid === 'string' && !self.aOptOut){
 						if(pageName.length<self.pnMaxLenght){
 							if(c=='hit'){
 								
