@@ -9,8 +9,8 @@ var ipService = require('ip');
 const requestIp = require('request-ip');
 var url = require('url');
 var uniqid = require('uniqid');
+var debug=f;
 var cookieService= require("cookies");
-var debug=false;
 // var skey = fs.readFileSync('lkey.pem');
 // var scert = fs.readFileSync('lcert.pem');
 const util = require('util');
@@ -387,7 +387,7 @@ https.createServer(optionshttps, function (req, res) {
 	serverCall(req, res);     
 }).listen(porthttps);
 console.log('Server running at https://127.0.0.1:'+porthttps); */
-var server = http.createServer(function(request, response) {
+var server = http.createServer(function(req, res) {
      serverCall(req, res);  
 });
 server.listen(porthttp);
