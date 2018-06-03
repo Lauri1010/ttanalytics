@@ -42,7 +42,7 @@
 	          this.eType='touchstart';
 	        }
 	        this.eSelector='a[href]';
-	        this.serverDomain='localhost';
+	        this.serverDomain='https://ttanalytics.azurewebsites.net';
 	        this.serverPort=':8888';
 			this.md=1;
 			this.bust=true;
