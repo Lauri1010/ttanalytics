@@ -3,15 +3,16 @@ var http = require('http');
 const fs = require('fs');
 var tls = require('tls');
 // HTTPS port 443, http port 80. To be changed in production
-var port = (process.env.PORT || process.env.VCAP_APP_PORT || 8888);
+var porthttp = (process.env.PORT || process.env.VCAP_APP_PORT || 80);
+var porthttps = (process.env.PORT || process.env.VCAP_APP_PORT || 443);
 var ipService = require('ip');
 const requestIp = require('request-ip');
 var url = require('url');
 var uniqid = require('uniqid');
 var cookieService= require("cookies");
 var debug=true;
-// var skey = fs.readFileSync('lkey.pem');
-// var scert = fs.readFileSync('lcert.pem');
+var skey = fs.readFileSync('lkey.pem');
+var scert = fs.readFileSync('lcert.pem');
 const util = require('util');
 let DocumentDBClient = require('documentdb').DocumentClient;
 let docdbUtils = require('./models/cosmosdb-manager');
@@ -369,12 +370,12 @@ function serverCall(req, res){
 	  }
 }
 
-/*
+
 https.createServer(options, function (req, res) {
 	serverCall(req, res);     
-}).listen(port);*/
-// console.log('Server running at https://127.0.0.1:'+port);
+}).listen(porthttps);
+console.log('Server running at https://127.0.0.1:'+pporthttps);
 http.createServer(options, function (req, res) {
 	serverCall(req, res); 
-}).listen(port);
-console.log('Server running at http://127.0.0.1:'+port);
+}).listen(porthttp);
+console.log('Server running at http://127.0.0.1:'+porthttp);
