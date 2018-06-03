@@ -81,11 +81,11 @@ var optionshttps = {
 	    rejectUnauthorized: false,
 	    requestCert: true,
 	    agent: false
-}; 
+};  */
 
-var options = {
+const options = {
 	 timeout:1000
-};*/
+};
 
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
@@ -99,10 +99,10 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 			  var a1;
 			  var a2;
 			  var a3;
-			  var amC=51;
-			  var a1mC=51;
-			  var a2mC=51;
-			  var a3mC=51;
+			  var amC=121;
+			  var a1mC=121;
+			  var a2mC=121;
+			  var a3mC=121;
 			  var tt_vid;
 			  var tt_uvid;
 			  var tt_time_c;
@@ -385,6 +385,6 @@ https.createServer(optionshttps, function (req, res) {
 	serverCall(req, res);     
 }).listen(porthttps);
 console.log('Server running at https://127.0.0.1:'+porthttps); */
-http.createServer(function (req, res) {
+http.createServer(options,function (req, res) {
 	serverCall(req, res);     
 }).listen(porthttps);
