@@ -378,4 +378,4 @@ var server = http.createServer(function(req, res) {
 });
 
 server.listen(port);
-server.timeout = 850;
+server.timeout = 5000;
