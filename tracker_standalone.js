@@ -217,7 +217,6 @@
 			try{
 				if(self.cm){console.log(pageName);};
 				if(self.ttid && typeof self.ttid === 'string' && !self.aOptOut){
-						if(pageName.length<self.pnMaxLenght){
 							if(c=='hit'){
 								
 								var st='c';
@@ -301,9 +300,6 @@
 								});
 								
 							}
-						}else{
-							if(self.cm){console.log("page name too long");};
-						}
 				}else{
 					if(self.cm){console.log("ttid needs to be set");};
 				}
