@@ -182,7 +182,11 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 				  ip=0;
 			  }else if(ipService.isV4Format(ip) && ip){
 				  ip=ipService.mask(ip);
-				  ip=ipService.toLong(ip);
+				  if(typeof ip!=='undefined'){
+					ip=ipService.toLong(ip);
+				  }else if(typeof ip == 'undefined' || !ip){
+					ip=0;
+				  }
 			  }
 			  
 			  if(debug){
