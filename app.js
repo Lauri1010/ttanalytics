@@ -3,7 +3,7 @@ var https = require('https');
 const fs = require('fs');
 var tls = require('tls');
 // HTTPS port 443, http port 80. To be changed in production
-var port = (process.env.PORT || process.env.VCAP_APP_PORT || 8888);
+var porthttp = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
 var ipService = require('ip');
 const requestIp = require('request-ip');
 var url = require('url');
@@ -380,5 +380,5 @@ https.createServer(optionshttps, function (req, res) {
 console.log('Server running at https://127.0.0.1:'+port); */
 http.createServer(function (req, res) {
 	serverCall(req, res); 
-}).listen(port);
+}).listen(porthttp);
 console.log('Server running at http://127.0.0.1:'+port);
