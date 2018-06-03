@@ -46,6 +46,7 @@
 			this.bust=true;
 			this.autotagging=true;
 			
+			
 			this.pageNameF=function() {
 				
 				var pathName=window.location.pathname;
@@ -57,7 +58,7 @@
 						}
 						// return pathName.replace('/(?!^)\//g', ':').toLowerCase();
 					}
-					return pathName.replace('/',':').toLowerCase();
+					return pathName.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/gi,':').toLowerCase();
 				}
 			};
 			
@@ -176,11 +177,11 @@
 					if(self.cm){console.log(self.aOptOut);};
 					if(self.cm){console.log(self.coptOut);};
 					
-					// if(!pageName && typeof pageName !== 'string'){
+					if(!pageName){
 						self.pageName=self.pageNameF();
-					// }else{
-						// self.pageName=pageName;
-					// }
+					}else if(typeof pageName==='string'){
+						self.pageName=pageName;
+					}
 					
 					if(typeof ttid == 'string'){
 						self.ttid=ttid
@@ -194,7 +195,7 @@
 					&& !self.aOptOut){
 						self.bust=bust;
 							if(fd){
-								self.t('hit',pageName,action);
+								self.t('hit',action);
 								if(self.autotagging){
 									if(self.cm){console.log('Autotagging enabled');};
 									self.ut();
@@ -212,10 +213,9 @@
 			    }
 		}
 	
-		tr.prototype.t=function(c,pageName,action){
+		tr.prototype.t=function(c,action){
 			var self=this;
 			try{
-				if(self.cm){console.log(pageName);};
 				if(self.ttid && typeof self.ttid === 'string' && !self.aOptOut){
 							if(c=='hit'){
 								
@@ -278,7 +278,7 @@
 									p.p=self.pageTitle;
 								} */
 	
-								p.p1=pageName;
+								p.p1=self.pageName;
 								
 								/*
 								if(typeof self.ePathE === 'string' && self.ePathE){
@@ -313,7 +313,7 @@
 		tr.prototype.ut=function(){
 			var self=this;
 			try{
-				document.body.addEventListener(self.eType, function(event) {
+				document.addEventListener(self.eType, function(event) {
 					var tag = event.target;
 					if (tag.tagName == 'A') {
 						if(self.ttid && typeof self.ttid === 'string' && (self.bust==true || self.bust==false) && typeof self.pageName === 'string'){
