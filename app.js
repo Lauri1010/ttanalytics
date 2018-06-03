@@ -174,7 +174,11 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 			  
 			  var ip=requestIp.getClientIp(req); 
 
-			  if(!ip || typeof ip==='undefined'){
+			  if(debug){
+				  console.log('Ip before '+ip);
+			  }
+			  
+			  if(!ip || typeof ip == 'undefined'){
 				  ip=0;
 			  }else if(ipService.isV4Format(ip) && ip){
 				  ip=ipService.mask(ip);
@@ -183,10 +187,6 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 			  
 			  if(debug){
 				  console.log('Ip '+ip);
-			  }
-			  
-			  if(debug){
-				  console.log(ip);
 			  }
 			  
 			  if(query.p2){
