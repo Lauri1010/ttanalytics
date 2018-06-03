@@ -81,11 +81,11 @@ var optionshttps = {
 	    rejectUnauthorized: false,
 	    requestCert: true,
 	    agent: false
-}; */
+}; 
 
 var options = {
 	 timeout:1000
-};
+};*/
 
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
@@ -387,8 +387,6 @@ https.createServer(optionshttps, function (req, res) {
 	serverCall(req, res);     
 }).listen(porthttps);
 console.log('Server running at https://127.0.0.1:'+porthttps); */
-var server = http.createServer(function(req, res) {
-     serverCall(req, res);  
-});
-server.timeout = 1000;
-server.listen(porthttp);
+http.createServer(function (req, res) {
+	serverCall(req, res);     
+}).listen(porthttps);
