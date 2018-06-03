@@ -3,8 +3,8 @@ var https = require('https');
 const fs = require('fs');
 var tls = require('tls');
 // HTTPS port 443, http port 80. To be changed in production
-var porthttp = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
-var porthttps = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
+var port = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
+// var porthttps = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
 var ipService = require('ip');
 const requestIp = require('request-ip');
 var url = require('url');
@@ -82,10 +82,10 @@ var optionshttps = {
 	    requestCert: true,
 	    agent: false
 };  */
-
+/*
 const options = {
 	 timeout:1000
-};
+};*/
 
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
@@ -370,11 +370,9 @@ function serverCall(req, res){
 	  }
 }
 
-/*
-https.createServer(optionshttps, function (req, res) {
-	serverCall(req, res);     
-}).listen(porthttps);
-console.log('Server running at https://127.0.0.1:'+porthttps); */
-http.createServer(options,function (req, res) {
-	serverCall(req, res);     
-}).listen(porthttps);
+var server = http.createServer(function(req, res) {
+    serverCall(req,res);
+});
+
+server.listen(port);
+server.timeout = 850;
