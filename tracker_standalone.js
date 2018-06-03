@@ -41,7 +41,7 @@
 	        }
 	        this.eSelector='a[href]';
 	        this.serverDomain='ttanalytics.azurewebsites.net';
-	        this.serverPort='1337';
+	        this.serverPort='';
 			this.md=1;
 			this.bust=true;
 			this.autotagging=true;
