@@ -341,7 +341,7 @@ function serverCall(req, res){
 					  });
 					}
 		  }else if(pathName==="/tc/"){
-				if(s==='c'){
+				if(s==='c' || s==='c2'){
 					if(debug){
 						console.log('c requested');
 					}
@@ -350,18 +350,8 @@ function serverCall(req, res){
 					}
 					res.statusCode = 204;
 					res.setHeader('Content-Type', 'image/jpg');
-					// res.json({p0: 0 })
-					// res.setHeader('Content-Type', 'text/plain');
 					res.end();
 					
-				}else if(s==='c2'){
-					if(typeof pCall==='function'){
-						pCall(ttid,url_parts,query,pathName,req,res);
-					}
-					res.statusCode = 200;
-					res.setHeader('Content-Type', 'application/javascript');
-					res.write("");
-					res.end();
 				}else{
 					res.statusCode = 200;
 					res.setHeader('Content-Type', 'text/plain');
