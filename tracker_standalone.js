@@ -41,7 +41,7 @@
 	        }
 	        this.eSelector='a[href]';
 	        this.serverDomain='ttanalytics.azurewebsites.net';
-	        this.serverPort='';
+	        this.serverPort='1337';
 			this.md=1;
 			this.bust=true;
 			this.autotagging=true;
@@ -343,7 +343,7 @@
 									console.log('Parent 1 class '+cl1);
 									console.log('Parent 2 class '+cl2);
 								}
-								self.t('hit',self.pageName,{'category':'click','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});			
+								self.t('hit',{'category':'click','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});				
 					  }else{
 						  if(self.cm){console.log('Autotracking invalid parameters tid: '+self.ttid+'  ');};
 					  }
