@@ -5,7 +5,7 @@
 
 		****/	
 		var tr=function(){
-			this.cm=false;
+			this.cm=true;
 			this.pageName;
 			this.pathNameV=window.location.pathname;
 			this.pathNameVF=this.pathNameV.replace('/',':');
