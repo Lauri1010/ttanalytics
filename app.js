@@ -9,7 +9,7 @@ var ipService = require('ip');
 const requestIp = require('request-ip');
 var url = require('url');
 var uniqid = require('uniqid');
-var debug=true;
+var debug=false;
 var cookieService= require("cookies");
 // var skey = fs.readFileSync('lkey.pem');
 // var scert = fs.readFileSync('lcert.pem');
@@ -334,7 +334,7 @@ function serverCall(req, res){
 	   if(req.method==='GET') {
 	      if(pathName==="/tl/"){
 					if(s==='gl'){
-					  fs.readFile(__dirname+'/tracker_standalone.js', function(err, data) {
+					  fs.readFile(__dirname+'/tracker_standalone_min.js', function(err, data) {
 						  res.statusCode = 200;
 						  res.setHeader('Content-Type', 'application/javascript');
 						  res.write(data);
@@ -349,18 +349,19 @@ function serverCall(req, res){
 					if(typeof pCall==='function'){
 						pCall(ttid,url_parts,query,pathName,req,res);
 					}
-					res.statusCode = 204;
+					res.setHeader('Content-Type', 'image/gif');
+					res.statusCode = 200;
 					res.end();
 					
 				}else{
 					res.statusCode = 200;
 					res.setHeader('Content-Type', 'text/plain');
-					res.end('unparamitarized');
+					res.end('Unparamitarized');
 				}
 	      }else{
 			  res.statusCode = 200;
 			  res.setHeader('Content-Type', 'text/plain');
-			  res.end('unparamitarized');
+			  res.end('Unparamitarized');
 	      }
 			
 	   }
