@@ -28,9 +28,11 @@
 			this.hn=window.location.hostname;
 			this.chn=this.hn.replace('www','');
 			this.ttid=00000;
-			this.aMaxLenghtC=41;
-			this.lMaxLenghtC=41;
-			this.pnMaxLenght=110;
+			this.aMaxLenghtC=80;
+			this.eTextLenght=105;
+			this.lMaxLenghtC=80;
+			this.pnMaxLength=110;
+			this.referrerMaxLength=110;
 			this.optOut=false;
 			this.coptOut=false;
 			// this.protocol=(location.protocol == "https:" ? "https://" : "http://");
@@ -216,7 +218,7 @@
 		tr.prototype.t=function(c,action){
 			var self=this;
 			try{
-				if(self.ttid && typeof self.ttid === 'string' && !self.aOptOut){
+				if(self.ttid && typeof self.ttid === 'string' && !self.aOptOut && self.pageName.length < self.pnMaxLength && self.referrerE.length < self.referrerMaxLength){
 							if(c=='hit'){
 								
 								var st='c';
@@ -334,16 +336,19 @@
 								var cl1=self.getParentElementClass(tag,0);
 								var cl2=self.getParentElementClass(tag,1);
 								
-								if(self.cm){ 
-									console.log('Href '+href);
-									console.log('Pathname '+pathName);
-									console.log('Element text or data attribute: '+elementText);
-									console.log('Parent 1 id '+id1);
-									console.log('Parent 2 id '+id2);
-									console.log('Parent 1 class '+cl1);
-									console.log('Parent 2 class '+cl2);
-								}
-								self.t('hit',{'category':'click','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});				
+								if(id1.length<self.aMaxLenghtC && id2.length<self.aMaxLenghtC && cl1.length<self.aMaxLenghtC && cl2.length<self.aMaxLenghtC && elementText.length < self.eTextLenght){
+								
+									if(self.cm){ 
+										console.log('Href '+href);
+										console.log('Pathname '+pathName);
+										console.log('Element text or data attribute: '+elementText);
+										console.log('Parent 1 id '+id1);
+										console.log('Parent 2 id '+id2);
+										console.log('Parent 1 class '+cl1);
+										console.log('Parent 2 class '+cl2);
+									}
+									self.t('hit',{'category':'click','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});	
+								}								
 					  }else{
 						  if(self.cm){console.log('Autotracking invalid parameters tid: '+self.ttid+'  ');};
 					  }
@@ -416,4 +421,3 @@
 		}());
 
 })(window,document);
-
