@@ -42,8 +42,13 @@
 	          this.eType='touchstart';
 	        }
 	        this.eSelector='a[href]';
-	        this.serverDomain='ttanalytics.azurewebsites.net';
-	        this.serverPort='';
+	        if(this.hn=='localhost'){
+	        	this.serverDomain='localhost';
+		        this.serverPort=':1337';
+	        }else{
+		        this.serverDomain='ttanalytics.azurewebsites.net';
+		        this.serverPort='';
+	        }
 			this.md=1;
 			this.bust=true;
 			this.autotagging=true;
@@ -336,7 +341,18 @@
 								var cl1=self.getParentElementClass(tag,0);
 								var cl2=self.getParentElementClass(tag,1);
 								
-								if(id1.length<self.aMaxLenghtC && id2.length<self.aMaxLenghtC && cl1.length<self.aMaxLenghtC && cl2.length<self.aMaxLenghtC && elementText.length < self.eTextLenght){
+								if(self.cm){ 
+									console.log('id2 length '+id2.length);
+									console.log('id2 length '+id2.length);
+									console.log('cl1 length  '+cl1.length);
+									console.log('cl2 length  '+cl2.length);
+								}
+								
+								if(id1.length<self.aMaxLenghtC && 
+								 id2.length<self.aMaxLenghtC && 
+								 cl1.length<self.aMaxLenghtC && 
+								 cl2.length<self.aMaxLenghtC && 
+								 elementText.length < self.eTextLenght){
 								
 									if(self.cm){ 
 										console.log('Href '+href);
