@@ -334,7 +334,7 @@ function serverCall(req, res){
 	   if(req.method==='GET') {
 	      if(pathName==="/tl/"){
 					if(s==='gl'){
-					  fs.readFile(__dirname+'/tracker_standalone.js', function(err, data) {
+					  fs.readFile(__dirname+'/tracker_standalone_min.js', function(err, data) {
 						  res.statusCode = 200;
 						  res.setHeader('Content-Type', 'application/javascript');
 						  res.write(data);
