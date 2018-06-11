@@ -3,7 +3,7 @@ var https = require('https');
 const fs = require('fs');
 var tls = require('tls');
 // HTTPS port 443, http port 80. To be changed in production
-var port = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
+var port = 1337;
 // var porthttps = (process.env.PORT || process.env.VCAP_APP_PORT || 1337);
 var ipService = require('ip');
 const requestIp = require('request-ip');
@@ -21,7 +21,7 @@ function ttModel() {
 	this.host = process.env.HOST || "https://ttanalytics.documents.azure.com:443/";
 	this.authKey = process.env.AUTH_KEY || "4AN57BRIrDURzWM6f4aEidAnykKtlir30XxQM9cXrdSV1pnxipNA9vq7MsiegroLPXpJSV6Q9xNB9KAB5kYZeQ==";
 	this.databaseId = "ttanalytics";
-	this.collectionId = "instance";
+	this.collectionId = "instance_production";
 	this.client = new DocumentDBClient(this.host, {
 	    masterKey: this.authKey
 	});
@@ -64,6 +64,9 @@ ttModel.prototype = {
 
 		    self.client.createDocument(self.collection._self, hit, function(err, doc) {
 		    if (err) {
+				if(debug){
+				   console.log(err);	
+			    }
 		        callback(err);
 		    } else {
 		        callback(null, doc);
@@ -110,13 +113,18 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 			  var pagePath="undefined";
 			  var pageTitle;
 			  var pageId;
+			  var c_uvid=1;
+			  var c_vid=1;
 			  var header=JSON.stringify(req.headers);
 			  if(debug){
 				  console.log(header);
 			  }
 			  var referrer="not defined";
-			  var hst = req.headers.host;
-			  var cleanHost=hst.substring(0, hst.indexOf(':'));
+              if(typeof query.hn !== 'undefined'){
+				var hst = query.hn;
+				// var cleanHost=hst.substring(0, hst.indexOf(':'));
+				var cleanHost=hst.replace(/\:/g,'.')
+			  }
 			  
 			  if(debug){
 				  console.log(hst);
@@ -125,14 +133,17 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 			  if(typeof req.headers.referer !== 'undefined'){
 				  referrer=req.headers.referer;
 			  }
+			  var aRef='no r parameter';
+			  if(typeof query.r !== 'undefined'){
+				  	aRef = query.r; 
+		      }
 			  
 			  var cookies = new cookieService( req, res ), unsigned, signed, tampered;
 			  
 			  if(debug){
 				  console.log('vid: '+cookies.get('tt_vid'));
 			  }
-			  
-			  
+
 			  if(typeof query.co === 'undefined'){
 				  
 				  if(cookies.get('tt_vid')){
@@ -166,11 +177,18 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 				  if(cookies.get('tt_time_c')!==null){
 					  tt_time_c=cookies.get('tt_time_c');
 				  } 
+				  
+				  			  
+				  if(typeof query.i !=='undefined'){
+					  c_uvid=query.i;
+				  }
+				  
+				  if(typeof query.v !=='undefined'){
+					  c_vid=query.v;
+				  }
 
-			  }else{
-				  tt_uvid=1;
-				  tt_vid=1;
 			  }
+
 			  
 			  var ip=requestIp.getClientIp(req); 
 
@@ -184,6 +202,10 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 				  ip=0;
 			  }else if(ipService.isV4Format(ip) && ip){
 				  ip=ipService.mask(ip,'255.255.255.0');
+				  
+			  }
+			  if(req.headers.hasOwnProperty("x-real-ip")){
+					  req.headers["x-real-ip"]=ipService.mask(req.headers["x-real-ip"],'255.255.255.0');
 			  }
 			  
 			  if(debug && typeof ip !== 'undefined'){
@@ -194,10 +216,6 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 				  pagePath=query.p2;
 			  }
 			  
-			  var hostname=req.headers.host;
-			  var lang=req.headers["accept-language"];
-			  			
-
 			  if(query.p1){
 				  pageName=query.p1;
 			  }
@@ -208,11 +226,12 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 			  
 			  if(debug){
 				  console.log(pageName);
+				  console.log('U vid: '+tt_uvid);
 			  }
 			  
 			  
 				 
-			if(tt_vid && tt_uvid && ttid && pageName){
+			if(ttid && pageName){
 			  
 		  	     var hitd = {
 		  				    "account": {
@@ -221,20 +240,23 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 		  				    },
 		  				    "session_data": {
 		  				        "visitor_id": tt_vid,
+								"visitor_id_client": c_vid,
 		  				        "location": "not defined",
 		  				        "ip": ip
 		  				    },
 		  				    "visitor": {
 		  				        "visitor_unique_id": tt_uvid,
+								"visitor_unique_id_client": c_uvid,
 		  				        "global_visitor_id": "not available"
 		  				    },
 		  				    "hit_data": {
 		  				        "page_name": pageName,
 		  				        "page_path_customized": pagePath,
 		  				        "page_url_shorned": pagePath,
-		  				        "page_domain": hst,
+		  				        "client_host": cleanHost,
 		  				        "unix_timestamp": Math.floor(new Date() / 1000),
 		  				        "referrer": referrer,
+								"referrer_actual": aRef,
 		  				        "event_category": "",
 		  				        "event_element_text": "",
 		  				        "event_target_url": "",
@@ -243,7 +265,8 @@ function pCall(ttid,url_parts,query,pathName,req,res){
 		  				        "event_htlm_parent2_id":"",
 		  				        "event_htlm_parent1_class":"",
 		  				        "event_htlm_parent2_class":"",
-		  				    }
+		  				    },
+							"header": req.headers,
 		  		  }; 
 
 				  if(query.a){
@@ -332,16 +355,7 @@ function serverCall(req, res){
 	   }*/
 
 	   if(req.method==='GET') {
-	      if(pathName==="/tl/"){
-					if(s==='gl'){
-					  fs.readFile(__dirname+'/tracker_standalone_min.js', function(err, data) {
-						  res.statusCode = 200;
-						  res.setHeader('Content-Type', 'application/javascript');
-						  res.write(data);
-						  res.end();
-					  });
-					}
-		  }else if(pathName==="/tc/"){
+	      if(pathName==="/tt/"){
 				if(s==='c' || s==='c2'){
 					if(debug){
 						console.log('c requested');

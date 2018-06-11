@@ -5,7 +5,7 @@
 
 		****/	
 		var tr=function(){
-			this.cm=true;
+			this.cm=false;
 			this.pageName;
 			this.pathNameV=window.location.pathname;
 			this.pathNameVF=this.pathNameV.replace('/',':');
@@ -18,6 +18,7 @@
 			this.domain = window.location.hostname;
 			this.pDomain= this.domain.replace('www.','.');
 			this.rDomain = this.domain.replace('www.','');
+			this.safeDomain = this.pDomain.replace(/\./g,':'); 
 			this.lHref=window.location.href;
 			this.dc=true;
 			this.fVtracked=false;
@@ -26,7 +27,6 @@
 			this.lTime;
 			this.tTime=false;
 			this.hn=window.location.hostname;
-			this.chn=this.hn.replace('www','');
 			this.ttid=00000;
 			this.aMaxLenghtC=80;
 			this.eTextLenght=105;
@@ -35,18 +35,21 @@
 			this.referrerMaxLength=110;
 			this.optOut=false;
 			this.coptOut=false;
+			this.uvid;
+			this.vid;
 			// this.protocol=(location.protocol == "https:" ? "https://" : "http://");
 			this.protocol='https://';
 	        this.eType='mousedown';
 	        if ('ontouchstart' in document.documentElement === true){
 	          this.eType='touchstart';
 	        }
-	        this.eSelector='a[href]';
+	        this.eSelector='a[href],input[type="submit"],button[type="submit"],button';
+
 	        if(this.hn=='localhost'){
 	        	this.serverDomain='localhost';
 		        this.serverPort=':1337';
 	        }else{
-		        this.serverDomain='ttanalytics.azurewebsites.net';
+		        this.serverDomain='ttanalytics.westeurope.cloudapp.azure.com';
 		        this.serverPort='';
 	        }
 			this.md=1;
@@ -75,7 +78,11 @@
                          text=text.replace(/\s\s+/g, ' ');
 						 return text;
             	      }else{
-                         return 'undefined';
+						 if(e.value){
+							return e.value; 
+						 }else{
+							return 'undefined';
+						 }
                       };    
 								  
 		    };
@@ -163,9 +170,9 @@
 			        	console.log(this.coptOut);
 			        }
 			        if(this.coptOut){
-			        	r.src = this.protocol+opts.url + '/tc/?co=1&' + qString;
+			        	r.src = this.protocol+opts.url + '/tt/?co=1&' + qString;
 			        }else{
-				        r.src = this.protocol+opts.url + '/tc/?' + qString;
+				        r.src = this.protocol+opts.url + '/tt/?' + qString;
 			        }
 			        if(opts.m===2){
 			        	document.getElementsByTagName('head')[0].appendChild(r);
@@ -177,6 +184,7 @@
 		tr.prototype.i=function(ttid,cm,fd,pageName,action,bust,autotracking,allowTracking,allowCookies){
 			    try{
 					var self=this;
+
 					self.cm=cm;	
 					self.aOptOut=!allowTracking;
 					self.coptOut=!allowCookies;
@@ -201,6 +209,18 @@
 					&& (bust === true || bust === false) 
 					&& !self.aOptOut){
 						self.bust=bust;
+						    if(!(self.rc("ttc1_uvid"))){
+								self.uvid=self.idg();
+								self.cc("ttc1_uvid",self.uvid,63072000,self.pDomain);
+							}else{
+								self.uvid=self.rc("ttc1_uvid");
+							}
+							if(!(self.rc("ttc1_vid"))){
+								self.vid=self.idg();
+								self.cc("ttc1_vid",self.vid,1800,self.pDomain);
+							}else{
+							    self.vid=self.rc("ttc1_vid");	
+							}
 							if(fd){
 								self.t('hit',action);
 								if(self.autotagging){
@@ -280,6 +300,14 @@
 									p.r=self.referrerE;
 								}
 								
+								if(typeof self.uvid !== 'undefined' && self.uvid){
+									p.i=self.uvid;
+								}
+								
+								if(typeof self.vid !== 'undefined' && self.vid){
+									p.v=self.vid;
+								}
+								
 								/*
 								if(typeof self.pageTitle === 'string' && self.pageTitle){
 									p.p=self.pageTitle;
@@ -292,6 +320,7 @@
 									p.p2=self.ePathE;
 								}*/
 
+								p.hn=self.safeDomain;
 								
 								self.$r({
 							       url : self.serverDomain+self.serverPort,
@@ -320,55 +349,63 @@
 		tr.prototype.ut=function(){
 			var self=this;
 			try{
+				
 				document.addEventListener(self.eType, function(event) {
 					var tag = event.target;
-					if (tag.tagName == 'A') {
-						if(self.ttid && typeof self.ttid === 'string' && (self.bust==true || self.bust==false) && typeof self.pageName === 'string'){
-							if(self.cm){console.log('Autotracking init');};
-							
-							var href=tag.href;
-							var pathName='undefined';
-	
-							if(typeof href !== 'undefined'){
-									pathName=encodeURIComponent(href.replace("http://","").replace("https://","").replace(self.hn,""));
-								
-							}
-								var elementText=self.readElementText(tag);
-								// var selectorData=self.getSdata(tag);
-								
-								var id1=self.getParentElementId(tag,0);
-								var id2=self.getParentElementId(tag,1);
-								var cl1=self.getParentElementClass(tag,0);
-								var cl2=self.getParentElementClass(tag,1);
-								
-								if(self.cm){ 
-									console.log('id2 length '+id2.length);
-									console.log('id2 length '+id2.length);
-									console.log('cl1 length  '+cl1.length);
-									console.log('cl2 length  '+cl2.length);
-								}
-								
-								if(id1.length<self.aMaxLenghtC && 
+					var tagName=tag.tagName.toLowerCase();
+					var id1=self.getParentElementId(tag,0);
+					var id2=self.getParentElementId(tag,1);
+					var cl1=self.getParentElementClass(tag,0);
+					var cl2=self.getParentElementClass(tag,1);
+					var elementText=self.readElementText(tag);
+				
+					if(id1.length<self.aMaxLenghtC && 
 								 id2.length<self.aMaxLenghtC && 
 								 cl1.length<self.aMaxLenghtC && 
 								 cl2.length<self.aMaxLenghtC && 
-								 elementText.length < self.eTextLenght){
-								
-									if(self.cm){ 
-										console.log('Href '+href);
-										console.log('Pathname '+pathName);
-										console.log('Element text or data attribute: '+elementText);
-										console.log('Parent 1 id '+id1);
-										console.log('Parent 2 id '+id2);
-										console.log('Parent 1 class '+cl1);
-										console.log('Parent 2 class '+cl2);
+								 elementText.length < self.eTextLenght &&
+								 self.ttid 
+								 && typeof self.ttid === 'string' && (self.bust==true || self.bust==false) && typeof self.pageName === 'string'){
+									if (tagName == 'a') {
+										
+											if(self.cm){console.log('Autotracking init');};
+											
+											var href=tag.href;
+											var pathName='undefined';
+					
+											if(typeof href !== 'undefined'){
+													pathName=encodeURIComponent(href.replace("http://","").replace("https://","").replace(self.hn,""));
+												
+											}
+												
+												// var selectorData=self.getSdata(tag);
+											
+												
+												if(self.cm){ 
+													console.log('id2 length '+id2.length);
+													console.log('id2 length '+id2.length);
+													console.log('cl1 length  '+cl1.length);
+													console.log('cl2 length  '+cl2.length);
+												}
+
+												
+													if(self.cm){ 
+														console.log('Href '+href);
+														console.log('Pathname '+pathName);
+														console.log('Element text or data attribute: '+elementText);
+														console.log('Parent 1 id '+id1);
+														console.log('Parent 2 id '+id2);
+														console.log('Parent 1 class '+cl1);
+														console.log('Parent 2 class '+cl2);
+													}
+													self.t('hit',{'category':'click','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});	
+											
+									}else if(tagName == 'input' || tagName == 'button'){
+									     self.t('hit',{'category':tagName+' submit','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});
 									}
-									self.t('hit',{'category':'click','text':elementText,'path':pathName,'pid1': id1,'pid2': id2,'pcl1': cl1,'pcl2': cl2});	
-								}								
-					  }else{
-						  if(self.cm){console.log('Autotracking invalid parameters tid: '+self.ttid+'  ');};
-					  }
+					  
 				    }
+		
 				});
 	 
 			 }catch(error){
@@ -385,7 +422,7 @@
 			 }
 		}
 		
-		tr.prototype.cc=function(name,value,seconds,domain,isSession) {
+		tr.prototype.cc=function(name,value,seconds,domain) {
 		    if (seconds) {
 		        var date = new Date();
 		        date.setTime(date.getTime()+(seconds*1000));
@@ -415,6 +452,28 @@
 		tr.prototype.ec=function(name) {
 		    createCookie(name,"",-1);
 		}
+		
+		tr.prototype.idg=function(){
+			 this.length = 8;
+			 this.timestamp = +new Date;
+			 
+			 var _getRandomInt = function( min, max ) {
+				return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+			 }
+
+				 var ts = this.timestamp.toString();
+				 var parts = ts.split( "" ).reverse();
+				 var id = "";
+				 
+				 for( var i = 0; i < this.length; ++i ) {
+					var index = _getRandomInt( 0, parts.length - 1 );
+					id += parts[index];	 
+				 }
+				 
+				 return id;
+	
+	   }
+	
 		
 		var tRun=new tr();
 		
